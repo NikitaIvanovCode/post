@@ -1,24 +1,57 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import './App.css';
 
+// const Input: FC<any> = ({ register }) => {
+//   const [getValue, setValue] = useState<string>('');
+
+//   return (
+//     <input
+//       type="text"
+//       value={getValue}
+//       onChange={(e: any) => setValue(e.target.value)}
+//       ref={register}
+//       name="input"
+//     />
+//   );
+// };
+
 function App() {
+  const { register, handleSubmit } = useForm({
+    mode: 'onChange',
+  });
+  const [getValue, setValue] = useState<string>('');
+
+  const onSubmit = handleSubmit(async data => {
+    const body = {
+      value: data.input,
+    };
+
+    fetch('/api/some', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      body: JSON.stringify(body),
+    })
+      .then(data => data.json)
+      .then(data => console.log(data));
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="wrapp">
+      <form onSubmit={onSubmit}>
+        {/* <Input register={register({ required: true })} /> */}
+        <input
+          type="text"
+          value={getValue}
+          onChange={(e: any) => setValue(e.target.value)}
+          ref={register}
+          name="input"
+        />
+        <button>send</button>
+      </form>
     </div>
   );
 }

@@ -1,0 +1,12 @@
+.slider {
+}
+
+.track {
+  display: grid;
+}
+
+.slide {
+  width: 550px;
+  height: 120px;
+  background-color: #c1c1c1;
+}
