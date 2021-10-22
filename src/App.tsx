@@ -1,59 +1,49 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import './App.css';
+import {FC, useEffect, useState} from 'react';
+import {useForm} from 'react-hook-form';
+import './styles.css';
 
-// const Input: FC<any> = ({ register }) => {
-//   const [getValue, setValue] = useState<string>('');
+type InputProps = {
+    name: string;
+    value?: string;
+    register: any;
+    defaultValue?: string
+};
 
-//   return (
-//     <input
-//       type="text"
-//       value={getValue}
-//       onChange={(e: any) => setValue(e.target.value)}
-//       ref={register}
-//       name="input"
-//     />
-//   );
-// };
+const Input: FC<InputProps> = ({name, value, register, defaultValue}) => {
+    return <input name={name} ref={register}/>;
+};
 
-function App() {
-  const { register, handleSubmit } = useForm({
-    mode: 'onChange',
-  });
-  const [getValue, setValue] = useState<string>('');
+const App = () => {
+    const {register, handleSubmit, watch} = useForm({
+        mode: 'onChange',
+    });
 
-  const onSubmit = handleSubmit(async data => {
-    const body = {
-      value: data.input,
-    };
+    const [getValue, setValue] = useState<string>('');
 
-    fetch('/api/some', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify(body),
-    })
-      .then(data => data.json)
-      .then(data => console.log(data));
-  });
+    const email = watch('email', getValue);
 
-  return (
-    <div className="wrapp">
-      <form onSubmit={onSubmit}>
-        {/* <Input register={register({ required: true })} /> */}
-        <input
-          type="text"
-          value={getValue}
-          onChange={(e: any) => setValue(e.target.value)}
-          ref={register}
-          name="input"
-        />
-        <button>send</button>
-      </form>
-    </div>
-  );
-}
+    // useEffect(() => {
+    //     if (email) {
+    //         const value = email.replace(/[^0-9]/g, '')
+    //         setValue(value)
+    //     }
+    // }, [email]);
+
+    const onSubmit = handleSubmit(async data => console.log(data));
+
+    return (
+        <div className="wrapp">
+            <form onSubmit={onSubmit}>
+                <Input
+                    name="email"
+                    register={register({required: true, pattern: /^[0-9]/g})}
+                    // value={getValue}
+                    // defaultValue={''}
+                />
+                <button>send</button>
+            </form>
+        </div>
+    );
+};
 
 export default App;
