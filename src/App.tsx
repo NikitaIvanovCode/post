@@ -9,6 +9,8 @@ type InputProps = {
     defaultValue?: string
 };
 
+const git='Bye die'
+
 const Input: FC<InputProps> = ({name, value, register, defaultValue}) => {
     return <input name={name} ref={register}/>;
 };
